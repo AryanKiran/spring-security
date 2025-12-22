@@ -10,10 +10,3 @@ public class SecurityAppApplication {
 	}
 
 }
-git init
-git add README.md
-git commit -m "configured spring security"
-git branch -M main
-git remote add origin https://github.com/AryanKiran/spring-security.git
-git push -u origin main
-
