@@ -13,9 +13,9 @@ import java.util.Date;
 import java.util.Set;
 
 @Service
-public class jwtService {
+public class JwtService {
 
-    @Value("#${jwt.secretKey}")
+    @Value("${jwt.secretKey}")
     private String jwtSecretKey;
 
     private SecretKey getSecretKey(){
@@ -29,7 +29,7 @@ public class jwtService {
                 .claim("roles",Set.of("admin","user"))
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis()+1000*60))
-                .signWith(getSecretKey())
+                .signWith(getSecretKey(),io.jsonwebtoken.SignatureAlgorithm.HS512)
                 .compact();
     }
 
@@ -41,4 +41,5 @@ public class jwtService {
                 .getPayload();
         return Long.valueOf(claims.getSubject());
     }
+
 }

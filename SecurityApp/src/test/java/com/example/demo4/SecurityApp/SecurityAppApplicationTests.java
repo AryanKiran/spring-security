@@ -1,8 +1,7 @@
 package com.example.demo4.SecurityApp;
 
 import com.example.demo4.SecurityApp.entities.User;
-import com.example.demo4.SecurityApp.services.UserService;
-import com.example.demo4.SecurityApp.services.jwtService;
+import com.example.demo4.SecurityApp.services.JwtService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class SecurityAppApplicationTests {
 
 	@Autowired
-	private jwtService	jwtService;
+	private JwtService jwtService;
 
 	@Test
 	void contextLoads() {
