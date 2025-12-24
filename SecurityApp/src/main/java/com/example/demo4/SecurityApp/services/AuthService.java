@@ -14,7 +14,6 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-
     public String Login(loginDto loginDto) {
 
         Authentication authentication =authenticationManager.authenticate(

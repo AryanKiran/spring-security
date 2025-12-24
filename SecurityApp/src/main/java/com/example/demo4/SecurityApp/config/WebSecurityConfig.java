@@ -3,6 +3,8 @@ package com.example.demo4.SecurityApp.config;
 import ch.qos.logback.core.encoder.Encoder;
 import com.example.demo4.SecurityApp.Filters.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 @Configuration
@@ -28,8 +31,10 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/posts","/auth/**").permitAll()
