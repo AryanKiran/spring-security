@@ -1,0 +1,84 @@
+---
+
+## Spring Boot 3 + Spring Security 6 – Custom Filter Issues
+
+### **Error 1**
+
+```
+org.springframework.beans.factory.UnsatisfiedDependencyException:
+Error creating bean with name
+'org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration':
+Unsatisfied dependency expressed through method 'setFilterChains'
+
+Caused by:
+Failed to instantiate [org.springframework.security.web.SecurityFilterChain]:
+Factory method 'securityFilterChain' threw exception with message:
+The Filter class
+com.example.demo4.SecurityApp.Filters.JwtAuthFilter
+does not have a registered order
+```
+
+### **Context**
+
+* Spring Boot 3.x
+* Spring Security 6.x
+* Custom filters extend `OncePerRequestFilter`
+* Filters were annotated with `@Component`
+* Filters were also added using:
+
+  ```java
+  http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+  ```
+
+### **Root Cause**
+
+* Filters were **auto-registered as servlet filters** because of `@Component`
+* Same filters were **also registered in SecurityFilterChain**
+* This caused **double registration**
+* Spring Security 6 fails fast and throws an error if filter order is ambiguous
+
+---
+
+### **Error 2 (After removing @Component)**
+
+```
+org.springframework.beans.factory.UnsatisfiedDependencyException:
+Error creating bean with name 'webSecurityConfig':
+Unsatisfied dependency expressed through constructor parameter 0:
+No qualifying bean of type
+'com.example.demo4.SecurityApp.Filters.JwtAuthFilter'
+available: expected at least 1 bean which qualifies as autowire candidate
+```
+
+### **Context**
+
+* `@Component` was removed from custom filters
+* Filters were still injected into `WebSecurityConfig` via constructor
+
+### **Root Cause**
+
+* After removing `@Component`, Spring had **no way to create the filter beans**
+* Filters were not declared using `@Bean`
+
+---
+
+### **Final Correct Setup**
+
+* Custom security filters **should NOT use `@Component`**
+* They **must be registered as `@Bean`**
+* Filters should only be added via:
+
+  ```java
+  addFilterBefore / addFilterAfter
+  ```
+* Spring Security 6 requires **explicit ownership of filter ordering**
+
+---
+
+### **Summary (One Line)**
+
+> In Spring Boot 3 + Spring Security 6, custom `OncePerRequestFilter`s must be defined as explicit `@Bean`s and registered only via `SecurityFilterChain`. Using `@Component` causes double registration and filter order errors.
+
+---
+
+

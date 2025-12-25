@@ -56,6 +56,4 @@ public class UserService implements UserDetailsService {
         User savedUser = userRepository.save(toBeCreatedUser);
         return modelMapper.map(savedUser, UserDto.class);
     }
-
-
 }
