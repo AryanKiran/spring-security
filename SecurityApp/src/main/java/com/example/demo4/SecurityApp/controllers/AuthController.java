@@ -1,6 +1,4 @@
 package com.example.demo4.SecurityApp.controllers;
-
-
 import com.example.demo4.SecurityApp.dto.SignUpDto;
 import com.example.demo4.SecurityApp.dto.UserDto;
 import com.example.demo4.SecurityApp.dto.loginDto;
@@ -52,8 +50,6 @@ public class AuthController {
                 .orElseThrow(() ->new AuthenticationServiceException("Refresh Token not found inside the cookie"));
 
         loginResponseDTO loginResponseDto = authService.refreshToken(refreshToken);
-
         return ResponseEntity.ok(loginResponseDto);
-
     }
 }

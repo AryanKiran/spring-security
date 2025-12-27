@@ -11,5 +11,4 @@ public class loginResponseDTO {
     private Long id;
     private String accessToken;
     private String refreshToken;
-
 }
