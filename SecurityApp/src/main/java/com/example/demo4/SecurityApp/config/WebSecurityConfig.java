@@ -2,6 +2,7 @@ package com.example.demo4.SecurityApp.config;
 
 import com.example.demo4.SecurityApp.Filters.JwtAuthFilter;
 import com.example.demo4.SecurityApp.Filters.LoggingFilter;
+import com.example.demo4.SecurityApp.enums.Role;
 import com.example.demo4.SecurityApp.services.JwtService;
 import com.example.demo4.SecurityApp.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
+import static com.example.demo4.SecurityApp.enums.Role.ADMIN;
+import static com.example.demo4.SecurityApp.enums.Role.USER;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -24,6 +28,9 @@ public class WebSecurityConfig {
 
     private final JwtService jwtService;
     private final UserService userService;
+    private final static String[] publicRoutes = {
+            "/auth/**", "/public/**","/error"
+    };
 
     @Qualifier("handlerExceptionResolver")
     private final HandlerExceptionResolver handlerExceptionResolver;
@@ -45,8 +52,8 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/public/**").permitAll()
-                        .requestMatchers("/post/**").hasRole("USER")
+                        .requestMatchers(publicRoutes).permitAll()
+                        .requestMatchers("/posts/**").hasRole(ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->

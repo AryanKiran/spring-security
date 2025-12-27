@@ -40,12 +40,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
           if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
               User user = userService.getUserById(userId);
               UsernamePasswordAuthenticationToken AuthenticationToken = new UsernamePasswordAuthenticationToken(
-                      user, null, null);
-
+                      user, null, user.getAuthorities());
+//              System.out.println("🔥 JWT FILTER AUTHORITIES = " + AuthenticationToken.getAuthorities());
               AuthenticationToken.setDetails(
                       new WebAuthenticationDetailsSource().buildDetails(request)
               );
-
               SecurityContextHolder.getContext().setAuthentication(AuthenticationToken);
           }
           filterChain.doFilter(request, response);
